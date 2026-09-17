@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honors Biology: Molecule Recognition Game</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --primary-hover: #357abd;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #fff;
+            --correct: #2ecc71;
+            --incorrect: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #game-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        #question-counter {
+            font-size: 0.9em;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .reference-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            display: none; 
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background-color: #e8f0fe;
+            border-color: var(--primary);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct);
+            color: white;
+            border-color: var(--correct);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect);
+            color: white;
+            border-color: var(--incorrect);
+        }
+
+        #next-btn, #restart-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 25px;
+            display: none;
+            transition: background-color 0.2s ease;
+        }
+
+        #next-btn:hover, #restart-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #score-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>Organic Molecule Recognition</h1>
+        
+        <div id="quiz-screen">
+            <div id="question-counter">Question 1 of X</div>
+            <img id="question-image" class="reference-img" src="" alt="Molecule Reference Image">
+            <div id="question-text">Question goes here?</div>
+            <div id="options-container">
+                <!-- Options injected via JavaScript -->
+            </div>
+            <button id="next-btn">Next Question</button>
+        </div>
+
+        <div id="result-screen" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <div id="score-display">You scored X out of Y</div>
+            <p id="feedback-text"></p>
+            <button id="restart-btn" style="display: inline-block;">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Look at the molecular structure above. What monomer is this, and what part of it is highlighted by the 'R' group?",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/AminoAcidball.svg/500px-AminoAcidball.svg.png",
+                options: ["Nucleotide; the R group is the nitrogenous base", "Amino Acid; the R group determines which specific amino acid it is", "Monosaccharide; the R group is a sugar ring", "Fatty Acid; the R group represents a double bond"],
+                answer: 1
+            },
+            {
+                question: "This image shows a closed-ring structure made of Carbon, Hydrogen, and Oxygen. What category of molecule is this?",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Alpha-D-Glucopyranose.svg/500px-Alpha-D-Glucopyranose.svg.png",
+                options: ["Carbohydrate (Monosaccharide)", "Lipid (Fatty Acid)", "Protein (Polypeptide)", "Nucleic Acid (DNA)"],
+                answer: 0
+            },
+            {
+                question: "Observe the structure shown. It is a long hydrocarbon chain with a double bond (C=C) causing it to bend. What type of molecule is this?",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Oleic_acid.svg/500px-Oleic_acid.svg.png",
+                options: ["Saturated Fat", "Unsaturated Fat", "Nucleotide", "Polysaccharide"],
+                answer: 1
+            },
+            {
+                question: "What monomer is pictured above, identifiable by its three distinct parts: a phosphate group, a 5-carbon sugar, and a nitrogenous base?",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Nucleotide_nucleoside_general.svg/500px-Nucleotide_nucleoside_general.svg.png",
+                options: ["Triglyceride", "Amino Acid", "Monosaccharide", "Nucleotide"],
+                answer: 3
+            },
+            {
+                question: "If a molecule is made purely of a Glycerol backbone attached to 3 fatty acid chains, what is it?",
+                options: ["A Disaccharide", "A Protein", "A Fat (Lipid)", "An Isotope"],
+                answer: 2
+            },
+            {
+                question: "What type of chemical bond specifically holds amino acids together to form a protein?",
+                options: ["Hydrogen bond", "Ionic bond", "Peptide bond", "Double bond"],
+                answer: 2
+            },
+            {
+                question: "Which of the following describes the difference between DNA and RNA based on your study guide?",
+                options: ["DNA uses Uracil, RNA uses Thymine", "DNA is a polymer, RNA is a monomer", "DNA and RNA are both polymers of nucleotides, but differ in some of their nitrogenous bases", "DNA contains sulfur, RNA contains phosphate"],
+                answer: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionCounterEl = document.getElementById('question-counter');
+        const questionImageEl = document.getElementById('question-image');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const scoreDisplay = document.getElementById('score-display');
+        const restartBtn = document.getElementById('restart-btn');
+        const feedbackText = document.getElementById('feedback-text');
+
+        function loadQuestion() {
+            nextBtn.style.display = 'none';
+            optionsContainer.innerHTML = '';
+            
+            const currentQ = questions[currentQuestionIndex];
+            
+            questionCounterEl.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            questionTextEl.innerText = currentQ.question;
+
+            if (currentQ.image) {
+                questionImageEl.src = currentQ.image;
+                questionImageEl.style.display = 'inline-block';
+            } else {
+                questionImageEl.style.display = 'none';
+            }
+
+            currentQ.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.classList.add('option-btn');
+                button.onclick = () => selectAnswer(index, button);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectAnswer(selectedIndex, selectedButton) {
+            const currentQ = questions[currentQuestionIndex];
+            const allButtons = optionsContainer.querySelectorAll('.option-btn');
+            
+            allButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === currentQ.answer) {
+                selectedButton.classList.add('correct');
+                score++;
+            } else {
+                selectedButton.classList.add('incorrect');
+                allButtons[currentQ.answer].classList.add('correct');
+            }
+
+            nextBtn.style.display = 'inline-block';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        function showResults() {
+            quizScreen.style.display = 'none';
+            resultScreen.style.display = 'block';
+            scoreDisplay.innerText = `You scored ${score} out of ${questions.length}!`;
+            
+            const percentage = (score / questions.length) * 100;
+            if (percentage >= 85) {
+                feedbackText.innerText = "Fantastic job! You can easily identify these organic molecules.";
+            } else if (percentage >= 60) {
+                feedbackText.innerText = "Good work! Review your functional groups and shapes a bit more.";
+            } else {
+                feedbackText.innerText = "Keep studying! Review your molecular structures and try again.";
+            }
+        }
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            loadQuestion();
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
