@@ -121,6 +121,18 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
+        /* Error state for images */
+        .image-error-msg {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            display: none;
+            border: 1px solid #f87171;
+        }
+
         /* --- Hint Styles --- */
         #hint-container {
             margin-bottom: 25px;
@@ -297,6 +309,10 @@
             </div>
             
             <img id="question-image" class="reference-img" src="" alt="Reference Image">
+            <div id="image-error" class="image-error-msg">
+                ⚠️ <strong>Image blocked by network!</strong> <br>Don't worry, just use the <strong>Hint (H)</strong> below to solve this question.
+            </div>
+
             <div id="question-text">Question goes here?</div>
             
             <div id="hint-container">
@@ -319,7 +335,7 @@
     </div>
 
     <script>
-        // The original questions array
+        // Updated with rock-solid .PNG thumbnail links
         const baseQuestions = [
             {
                 question: "What is the smallest unit of an element in science?",
@@ -353,28 +369,28 @@
             },
             {
                 question: "Look at the molecular structure above. What monomer is this, and what part of it is highlighted by the 'R' group?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/c/ce/AminoAcidball.svg",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/AminoAcidball.svg/400px-AminoAcidball.svg.png",
                 options: ["Nucleotide; the R group is the base", "Amino Acid; the R group determines which specific amino acid it is", "Monosaccharide; the R group is a sugar", "Fatty Acid; the R group is a double bond"],
                 answer: 1,
                 hint: "Notice the 'N' (amino group) on the left and the 'COOH' (acid group) on the right."
             },
             {
                 question: "This image shows a closed-ring structure made of Carbon, Hydrogen, and Oxygen in a 1:2:1 ratio. What category of molecule is this?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Alpha-D-glucopyranose.svg",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Alpha-D-glucopyranose.svg/400px-Alpha-D-glucopyranose.svg.png",
                 options: ["Carbohydrate (Monosaccharide)", "Lipid (Fatty Acid)", "Protein (Polypeptide)", "Nucleic Acid (DNA)"],
                 answer: 0,
                 hint: "The 1:2:1 ratio (like C6H12O6) and the hexagon shape are the classic signatures of simple sugars."
             },
             {
                 question: "Observe the structure shown. It is a long hydrocarbon chain with a double bond (C=C) causing it to bend. What type of molecule is this?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/0/07/Oleic_acid.svg",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Oleic_acid.svg/500px-Oleic_acid.svg.png",
                 options: ["Saturated Fat", "Unsaturated Fat", "Nucleotide", "Polysaccharide"],
                 answer: 1,
                 hint: "The bend/kink means it doesn't have the maximum number of hydrogens attached. It is not fully 'saturated' with hydrogen."
             },
             {
                 question: "What monomer is pictured above, identifiable by its three distinct parts: a phosphate group, a 5-carbon sugar, and a nitrogenous base?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Nucleotide_nucleoside_general.svg",
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Nucleotide_nucleoside_general.svg/400px-Nucleotide_nucleoside_general.svg.png",
                 options: ["Triglyceride", "Amino Acid", "Monosaccharide", "Nucleotide"],
                 answer: 3,
                 hint: "This is the building block of DNA and RNA."
@@ -413,6 +429,7 @@
         const questionCounterEl = document.getElementById('question-counter');
         const scoreTrackerEl = document.getElementById('score-tracker');
         const questionImageEl = document.getElementById('question-image');
+        const imageErrorEl = document.getElementById('image-error');
         const questionTextEl = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
         const nextBtn = document.getElementById('next-btn');
@@ -424,11 +441,15 @@
         const progressBar = document.getElementById('progress-bar');
         const progressWrapper = document.getElementById('progress-wrapper');
         
-        // Hint Elements
         const hintBtn = document.getElementById('hint-btn');
         const hintText = document.getElementById('hint-text');
 
-        // --- Shuffle Logic ---
+        // Image loading failsafe
+        questionImageEl.onerror = function() {
+            this.style.display = 'none';
+            imageErrorEl.style.display = 'block';
+        };
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -437,13 +458,9 @@
         }
 
         function initializeGame() {
-            // Deep copy base questions so we can alter them safely
             questions = JSON.parse(JSON.stringify(baseQuestions));
-            
-            // 1. Shuffle the order of the questions
             shuffleArray(questions);
 
-            // 2. Shuffle the options within EACH question (and update the answer index)
             questions.forEach(q => {
                 const correctOptionText = q.options[q.answer];
                 shuffleArray(q.options);
@@ -466,18 +483,17 @@
             nextBtn.style.display = 'none';
             optionsContainer.innerHTML = '';
             
-            // Re-trigger fade-in animation
+            // Reset state
+            imageErrorEl.style.display = 'none';
             quizScreen.classList.remove('fade-in');
-            void quizScreen.offsetWidth; // force reflow
+            void quizScreen.offsetWidth; 
             quizScreen.classList.add('fade-in');
             
-            // Reset Hint UI
             hintText.style.display = 'none';
             hintBtn.style.display = 'inline-block';
             
             const currentQ = questions[currentQuestionIndex];
             
-            // Update UI Counters & Bar
             questionCounterEl.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
             scoreTrackerEl.innerText = `Score: ${score}`;
             questionTextEl.innerText = currentQ.question;
@@ -486,15 +502,16 @@
             const progressPercent = (currentQuestionIndex / questions.length) * 100;
             progressBar.style.width = `${progressPercent}%`;
 
-            // Handle Image
             if (currentQ.image) {
-                questionImageEl.src = currentQ.image;
+                // Ensure image element is shown (unless it errors out)
                 questionImageEl.style.display = 'inline-block';
+                questionImageEl.src = currentQ.image;
             } else {
                 questionImageEl.style.display = 'none';
+                // Need to explicitly clear the src so it doesn't try to load the old one
+                questionImageEl.src = "";
             }
 
-            // Create Option Buttons
             currentQ.options.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.classList.add('option-btn');
@@ -504,7 +521,6 @@
             });
         }
 
-        // Hint Button Click Event
         hintBtn.addEventListener('click', showHint);
 
         function showHint() {
@@ -546,7 +562,7 @@
         });
 
         function showResults() {
-            progressBar.style.width = `100%`; // Finish progress bar
+            progressBar.style.width = `100%`; 
             
             setTimeout(() => {
                 quizScreen.style.display = 'none';
@@ -567,26 +583,22 @@
         }
 
         restartBtn.addEventListener('click', () => {
-            initializeGame(); // Re-shuffle everything when playing again
+            initializeGame(); 
         });
 
-        // --- KEYBOARD EVENT LISTENER ---
         document.addEventListener('keydown', (event) => {
             if (resultScreen.style.display === 'block') return;
 
-            // Handle "Enter" key for next question
             if (event.key === 'Enter' && nextBtn.style.display === 'inline-block') {
                 nextBtn.click();
                 return;
             }
 
-            // Handle "H" or "h" for Hint
             if ((event.key === 'h' || event.key === 'H') && hintBtn.style.display === 'inline-block') {
                 showHint();
                 return;
             }
 
-            // Handle 1, 2, 3, 4 keys for answering
             const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3 };
             if (keyMap.hasOwnProperty(event.key) && !hasAnswered) {
                 const answerIndex = keyMap[event.key];
@@ -597,7 +609,6 @@
             }
         });
 
-        // Start the game!
         initializeGame();
     </script>
 </body>
