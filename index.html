@@ -13,6 +13,10 @@
             --card-bg: #fff;
             --correct: #2ecc71;
             --incorrect: #e74c3c;
+            --hint-bg: #fff3cd;
+            --hint-text: #856404;
+            --hint-btn: #f39c12;
+            --hint-btn-hover: #d68910;
         }
 
         body {
@@ -77,6 +81,39 @@
             display: none; 
         }
 
+        /* --- Hint Styles --- */
+        #hint-container {
+            margin-bottom: 20px;
+            min-height: 40px; /* Prevents layout shifting */
+        }
+
+        #hint-btn {
+            background-color: var(--hint-btn);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-weight: bold;
+        }
+
+        #hint-btn:hover {
+            background-color: var(--hint-btn-hover);
+        }
+
+        #hint-text {
+            background-color: var(--hint-bg);
+            color: var(--hint-text);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ffeeba;
+            font-size: 0.95em;
+            display: none;
+            margin: 0;
+        }
+
         #options-container {
             display: flex;
             flex-direction: column;
@@ -116,7 +153,6 @@
             border-color: var(--incorrect);
         }
 
-        /* Number badges for the buttons */
         .key-badge {
             display: inline-block;
             background-color: #ddd;
@@ -161,12 +197,18 @@
 
     <div id="game-container">
         <h1>Master Biology Review</h1>
-        <div class="keyboard-hint">Pro tip: Use keys 1-4 to answer, and Enter for next!</div>
+        <div class="keyboard-hint">Pro tip: Use keys 1-4 to answer, H for Hint, and Enter for next!</div>
         
         <div id="quiz-screen">
             <div id="question-counter">Question 1 of X</div>
             <img id="question-image" class="reference-img" src="" alt="Reference Image">
             <div id="question-text">Question goes here?</div>
+            
+            <div id="hint-container">
+                <button id="hint-btn">💡 Show Hint (H)</button>
+                <p id="hint-text"></p>
+            </div>
+
             <div id="options-container">
                 <!-- Options injected via JavaScript -->
             </div>
@@ -186,77 +228,90 @@
             {
                 question: "What is the smallest unit of an element in science?",
                 options: ["Compound", "Atom", "Molecule", "Ion"],
-                answer: 1
+                answer: 1,
+                hint: "Think of the absolute most basic building block of all matter."
             },
             {
                 question: "What type of chemical bond is formed when electrons are SHARED between atoms?",
                 options: ["Ionic bond", "Hydrogen bond", "Covalent bond", "Peptide bond"],
-                answer: 2
+                answer: 2,
+                hint: "The prefix 'co-' means together, like cooperating or sharing."
             },
             {
                 question: "Why is water considered a polar molecule?",
                 options: ["It forms at the poles of the earth", "It has an equal sharing of electrons", "It is extremely cold", "Oxygen has a slight negative charge and hydrogens have a slight positive charge"],
-                answer: 3
+                answer: 3,
+                hint: "Polarity means having distinct opposite ends, similar to how a magnet works."
             },
             {
                 question: "What gives Carbon its unique ability to form large, complex, and diverse molecules?",
                 options: ["It has 4 valence electrons allowing it to form strong covalent bonds", "It is highly radioactive", "It only forms ionic bonds with oxygen", "It is the most abundant element in the atmosphere"],
-                answer: 0
+                answer: 0,
+                hint: "Carbon is in Group 14 of the periodic table, meaning it needs four more outer electrons to be 'happy'."
             },
             {
                 question: "What process joins monomers together to form a polymer by REMOVING a water molecule?",
                 options: ["Hydrolysis", "Dehydration synthesis", "Adhesion", "Activation energy"],
-                answer: 1
+                answer: 1,
+                hint: "When you lose water, you become 'dehydrated'. 'Synthesis' means to build."
             },
             {
                 question: "Look at the molecular structure above. What monomer is this, and what part of it is highlighted by the 'R' group?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/AminoAcidball.svg/500px-AminoAcidball.svg.png",
+                image: "https://upload.wikimedia.org/wikipedia/commons/c/ce/AminoAcidball.svg",
                 options: ["Nucleotide; the R group is the base", "Amino Acid; the R group determines which specific amino acid it is", "Monosaccharide; the R group is a sugar", "Fatty Acid; the R group is a double bond"],
-                answer: 1
+                answer: 1,
+                hint: "Notice the 'N' (amino group) on the left and the 'COOH' (acid group) on the right."
             },
             {
                 question: "This image shows a closed-ring structure made of Carbon, Hydrogen, and Oxygen in a 1:2:1 ratio. What category of molecule is this?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Alpha-D-Glucopyranose.svg/500px-Alpha-D-Glucopyranose.svg.png",
+                image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Alpha-D-glucopyranose.svg",
                 options: ["Carbohydrate (Monosaccharide)", "Lipid (Fatty Acid)", "Protein (Polypeptide)", "Nucleic Acid (DNA)"],
-                answer: 0
+                answer: 0,
+                hint: "The 1:2:1 ratio (like C6H12O6) and the hexagon shape are the classic signatures of simple sugars."
             },
             {
                 question: "Observe the structure shown. It is a long hydrocarbon chain with a double bond (C=C) causing it to bend. What type of molecule is this?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Oleic_acid.svg/500px-Oleic_acid.svg.png",
+                image: "https://upload.wikimedia.org/wikipedia/commons/0/07/Oleic_acid.svg",
                 options: ["Saturated Fat", "Unsaturated Fat", "Nucleotide", "Polysaccharide"],
-                answer: 1
+                answer: 1,
+                hint: "The bend/kink means it doesn't have the maximum number of hydrogens attached. It is not fully 'saturated' with hydrogen."
             },
             {
                 question: "What monomer is pictured above, identifiable by its three distinct parts: a phosphate group, a 5-carbon sugar, and a nitrogenous base?",
-                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Nucleotide_nucleoside_general.svg/500px-Nucleotide_nucleoside_general.svg.png",
+                image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Nucleotide_nucleoside_general.svg",
                 options: ["Triglyceride", "Amino Acid", "Monosaccharide", "Nucleotide"],
-                answer: 3
+                answer: 3,
+                hint: "This is the building block of DNA and RNA."
             },
             {
                 question: "If a molecule is made purely of a Glycerol backbone attached to 3 fatty acid chains, what is it?",
                 options: ["A Disaccharide", "A Protein", "A Lipid (Triglyceride)", "An Isotope"],
-                answer: 2
+                answer: 2,
+                hint: "The prefix 'tri-' in the answer gives a clue for the 3 chains."
             },
             {
                 question: "What is the primary effect of enzymes on chemical reactions?",
                 options: ["They slow down the reaction rate", "They increase the activation energy needed", "They act as catalysts to speed up reactions by lowering activation energy", "They turn products back into reactants"],
-                answer: 2
+                answer: 2,
+                hint: "Enzymes are biological 'helpers' that make things happen much faster and with less initial effort."
             },
             {
                 question: "In an exothermic reaction, what happens to energy?",
                 options: ["Energy is absorbed, leaving products with more energy than reactants", "Energy is released, leaving products with less energy than reactants", "Energy is destroyed completely", "Energy remains perfectly equal"],
-                answer: 1
+                answer: 1,
+                hint: "The prefix 'Exo-' means outside or exiting. Think of heat exiting a fire."
             },
             {
-                question: "What happens to an enzyme if the temperature or pH gets too high/extreme?",
+                question: "What happens to an enzyme if the temperature or pH gets too extreme?",
                 options: ["It works much faster", "It denatures (changes shape) and its active site no longer works", "It turns into a lipid", "It becomes a reactant"],
-                answer: 1
+                answer: 1,
+                hint: "Proteins are fragile. Extreme heat melts or unfolds their specific 3D shape, breaking the 'lock and key' fit."
             }
         ];
 
         let currentQuestionIndex = 0;
         let score = 0;
-        let hasAnswered = false; // Prevents multiple keyboard inputs
+        let hasAnswered = false;
 
         const questionCounterEl = document.getElementById('question-counter');
         const questionImageEl = document.getElementById('question-image');
@@ -268,17 +323,27 @@
         const scoreDisplay = document.getElementById('score-display');
         const restartBtn = document.getElementById('restart-btn');
         const feedbackText = document.getElementById('feedback-text');
+        
+        // Hint Elements
+        const hintBtn = document.getElementById('hint-btn');
+        const hintText = document.getElementById('hint-text');
 
         function loadQuestion() {
             hasAnswered = false;
             nextBtn.style.display = 'none';
             optionsContainer.innerHTML = '';
             
+            // Reset Hint UI
+            hintText.style.display = 'none';
+            hintBtn.style.display = 'inline-block';
+            
             const currentQ = questions[currentQuestionIndex];
             
             questionCounterEl.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
             questionTextEl.innerText = currentQ.question;
+            hintText.innerText = currentQ.hint;
 
+            // Load new stable image URLs
             if (currentQ.image) {
                 questionImageEl.src = currentQ.image;
                 questionImageEl.style.display = 'inline-block';
@@ -289,23 +354,33 @@
             currentQ.options.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.classList.add('option-btn');
-                
-                // Add the number badge (1, 2, 3, 4)
                 button.innerHTML = `<span class="key-badge">${index + 1}</span> ${option}`;
-                
                 button.onclick = () => selectAnswer(index, button);
                 optionsContainer.appendChild(button);
             });
         }
 
+        // Hint Button Click Event
+        hintBtn.addEventListener('click', showHint);
+
+        function showHint() {
+            if (!hasAnswered) {
+                hintBtn.style.display = 'none';
+                hintText.style.display = 'block';
+            }
+        }
+
         function selectAnswer(selectedIndex, selectedButton) {
-            if (hasAnswered) return; // Prevent clicking multiple times
+            if (hasAnswered) return; 
             hasAnswered = true;
 
             const currentQ = questions[currentQuestionIndex];
             const allButtons = optionsContainer.querySelectorAll('.option-btn');
             
             allButtons.forEach(btn => btn.disabled = true);
+
+            // Hide the hint button if it wasn't used yet, to clean up UI
+            hintBtn.style.display = 'none'; 
 
             if (selectedIndex === currentQ.answer) {
                 selectedButton.classList.add('correct');
@@ -352,7 +427,6 @@
 
         // --- KEYBOARD EVENT LISTENER ---
         document.addEventListener('keydown', (event) => {
-            // Don't do anything if we are on the results screen
             if (resultScreen.style.display === 'block') return;
 
             // Handle "Enter" key for next question
@@ -361,20 +435,23 @@
                 return;
             }
 
+            // Handle "H" or "h" for Hint
+            if ((event.key === 'h' || event.key === 'H') && hintBtn.style.display === 'inline-block') {
+                showHint();
+                return;
+            }
+
             // Handle 1, 2, 3, 4 keys for answering
             const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3 };
             if (keyMap.hasOwnProperty(event.key) && !hasAnswered) {
                 const answerIndex = keyMap[event.key];
                 const allButtons = optionsContainer.querySelectorAll('.option-btn');
-                
-                // Ensure the button actually exists (e.g., if there are fewer than 4 options)
                 if (allButtons[answerIndex]) {
                     selectAnswer(answerIndex, allButtons[answerIndex]);
                 }
             }
         });
 
-        // Initialize the first question
         loadQuestion();
     </script>
 </body>
