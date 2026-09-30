@@ -139,6 +139,25 @@
     transform: translateY(0);
   }
 
+  .menu-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid var(--accent);
+    color: var(--text-main);
+    padding: 1.2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+  
+  .menu-btn:hover {
+    background: rgba(56, 189, 248, 0.3);
+    transform: scale(1.02);
+  }
+
   .key-badge {
     background: #0f172a;
     border: 1px solid #475569;
@@ -227,6 +246,13 @@
   @media (max-width: 600px) {
     .options-grid { grid-template-columns: 1fr; }
   }
+
+  #start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+  }
 </style>
 </head>
 <body>
@@ -240,207 +266,243 @@
     <div class="subtitle">Membrane Model, Osmosis Lab & Cell Identification</div>
   </div>
 
-  <div class="progress-bar">
-    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+  <div id="start-screen" class="fade-in">
+    <p style="margin-bottom: 2rem; font-size: 1.1rem; color: #cbd5e1;">Select your study mode below to begin.</p>
+    <button class="menu-btn" onclick="initGame('learn')">📖 Learn Basics (Core Concepts)</button>
+    <button class="menu-btn" style="border-color: #818cf8; background: rgba(129, 140, 248, 0.15);" onclick="initGame('full')">🎓 Full Review (All Lab Questions)</button>
   </div>
 
-  <div id="game-area" class="fade-in">
-    <div class="question-text" id="question-text">Loading...</div>
-    <div class="options-grid single-col" id="options-grid"></div>
-  </div>
+  <div id="quiz-ui" style="display: none;">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+    </div>
 
-  <div class="footer">
-    <div class="stats">Score: <span class="score-val" id="score">0</span></div>
-    <div class="continue-hint" id="continue-hint">Press ENTER to continue</div>
-    <div class="stats">Question <span id="q-counter" class="score-val">0/0</span></div>
+    <div id="game-area" class="fade-in">
+      <div class="question-text" id="question-text">Loading...</div>
+      <div class="options-grid single-col" id="options-grid"></div>
+    </div>
+
+    <div class="footer">
+      <div class="stats">Score: <span class="score-val" id="score">0</span></div>
+      <div class="continue-hint" id="continue-hint">Press ENTER to continue</div>
+      <div class="stats">Question <span id="q-counter" class="score-val">0/0</span></div>
+    </div>
   </div>
 </div>
 
 <script>
   const textQuestionsData = [
-    // Source 1: Membrane Model
+    // --- NEW / TAGGED BASIC LEARNING QUESTIONS ---
     {
-      q: "In the bubble activity, what did the light and movement of molecules on the soap film demonstrate?[cite: 1]",
+      q: "What is a eukaryotic cell?",
+      o: ["A cell that has a nucleus and membrane-bound organelles", "A simple cell with no nucleus", "A cell that is only found in plants", "A cell that lacks DNA"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What is a prokaryotic cell?",
+      o: ["A cell with no nucleus", "A cell with a distinct nucleus", "An animal cell", "A cell that lacks a cell membrane"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What three structures do ALL cells have in common?",
+      o: ["Cell membrane, cytoplasm, and DNA", "Nucleus, cell wall, and chloroplasts", "Cell wall, cytoplasm, and DNA", "Cell membrane, nucleus, and cytoplasm"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What does it mean when a cell membrane is described as 'fluid'?",
+      o: ["It is always in motion", "It is made of pure water", "It dissolves easily", "It is entirely rigid"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What is a 'dependent variable' in an experiment?",
+      o: ["The result or data that is measured (like mass)", "The condition the scientist changes (like the solution)", "The elements kept exactly the same", "The control group"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What is an 'independent variable' in an experiment?",
+      o: ["The condition the scientist changes (like the liquid concentration)", "The result that is measured (like mass)", "The elements kept exactly the same", "The control group"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What is a 'controlled variable'?",
+      o: ["A condition kept exactly the same throughout the experiment", "The result being measured", "The main thing being changed by the scientist", "The hypothesis"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "Which type of cell is bacteria?",
+      o: ["Prokaryotic", "Eukaryotic", "Plant cell", "Animal cell"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "Why is having a flexible barrier significant for animal cells?",
+      o: ["So that cells can move with the body", "So they can absorb more light", "So they can become rigid like plants", "So they never divide"],
+      a: 0,
+      isBase: true
+    },
+
+    // --- DETAILED LAB QUESTIONS ---
+    {
+      q: "In the bubble activity, what did the light and movement of molecules on the soap film demonstrate?",
       o: ["Fluidity", "Flexibility", "Self-sealing", "Cell division"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What did bending the straws without breaking the soap film demonstrate about membranes?[cite: 1]",
+      q: "What did bending the straws without breaking the soap film demonstrate about membranes?",
       o: ["Flexibility", "Fluidity", "Permeability", "Rigidity"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When the membrane sealed around the paper clip, what property did this show?[cite: 1]",
+      q: "When the membrane sealed around the paper clip, what property did this show?",
       o: ["Self-sealing", "Fluidity", "Active transport", "Osmosis"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What happened when the soap bubble membrane was poked with a dry paper clip?[cite: 1]",
+      q: "What happened when the soap bubble membrane was poked with a dry paper clip?",
       o: ["The membrane popped", "The membrane sealed around it", "The paper clip passed through easily", "The membrane duplicated"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When poking a finger into the membrane, what property was demonstrated when it didn't pop?[cite: 1]",
+      q: "When poking a finger into the membrane, what property was demonstrated when it didn't pop?",
       o: ["Self-sealing", "Active transport", "Osmosis", "Cell division"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "In the bubble model, a string circle allowed a hole to be opened in the middle. What does this demonstrate about cell membranes?[cite: 1]",
+      q: "In the bubble model, a string circle allowed a hole to be opened in the middle. What does this demonstrate about cell membranes?",
       o: ["They can have openings for transport of substances", "They are completely impermeable", "They dissolve in water", "They are entirely solid"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Dividing the bubble in half without it popping was used to show what cellular process?[cite: 1]",
+      q: "Dividing the bubble in half without it popping was used to show what cellular process?",
       o: ["Cell division", "Protein synthesis", "Osmosis", "Cellular respiration"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Why is having a flexible barrier significant for animal cells like blood, muscle, and skin?[cite: 1]",
-      o: ["So that cells can move with the body", "So that the cells can absorb more light", "So that the cells can become rigid like plants", "So they can divide indefinitely"],
-      a: 0
-    },
-    {
-      q: "How is the term 'fluid' used to describe cell membranes in the bubble lab?[cite: 1]",
-      o: ["Always in motion", "Made entirely of liquid water", "Dissolves easily in acids", "Completely solid at room temperature"],
-      a: 0
-    },
-    {
-      q: "What does the self-sealing property of membranes allow?[cite: 1]",
+      q: "What does the self-sealing property of membranes allow?",
       o: ["Things can go through them without the membrane being destroyed", "The cell to trap water indefinitely", "The cell wall to harden instantly", "The nucleus to escape without damage"],
-      a: 0
+      a: 0,
+      isBase: false
     },
-
-    // Source 2: Osmosis Lab
     {
-      q: "In the Osmosis Lab, what formula is used to calculate the change in mass?[cite: 2]",
+      q: "In the Osmosis Lab, what formula is used to calculate the change in mass?",
       o: ["Final mass - Initial mass", "Initial mass + Final mass", "Final mass / Initial mass", "Initial mass - Final mass"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "In the Osmosis Lab, what is the correct formula to calculate the percent change in mass?[cite: 2]",
+      q: "In the Osmosis Lab, what is the correct formula to calculate the percent change in mass?",
       o: ["(Change in Mass / Initial Mass) x 100", "(Final Mass / Initial Mass) x 100", "(Initial Mass / Change in Mass) x 100", "(Change in Mass / Final Mass) x 100"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When making the bar graph for the osmosis lab data, which variable goes on the Y axis?[cite: 2]",
+      q: "When making the bar graph for the osmosis lab data, which variable goes on the Y axis?",
       o: ["% Change in mass", "Concentration of solutions", "Initial mass", "Final mass"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When making the bar graph for the osmosis lab data, which variable goes on the X axis?[cite: 2]",
+      q: "When making the bar graph for the osmosis lab data, which variable goes on the X axis?",
       o: ["Concentration of the solutions", "% Change in mass", "Type of potato/carrot", "Time in solution"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "In the osmosis lab data collection, which of the following is the dependent variable?[cite: 2]",
-      o: ["Mass or weight of potato/carrot", "Solutions/liquid/concentration", "Cup size", "Temperature of room"],
-      a: 0
-    },
-    {
-      q: "In the osmosis lab data collection, which of the following is the independent variable?[cite: 2]",
-      o: ["Solutions/liquid/concentration", "Mass or weight of potato", "Cup size", "Amount of liquid"],
-      a: 0
-    },
-    {
-      q: "Which of the following is a controlled variable in the osmosis lab?[cite: 2]",
-      o: ["Cup size", "Concentration of NaCl", "Mass of the potato", "% change in mass"],
-      a: 0
-    },
-    {
-      q: "Which of these lists contains ONLY controlled variables from the osmosis lab?[cite: 2]",
+      q: "Which of these lists contains ONLY controlled variables from the osmosis lab?",
       o: ["Cup size, storage area, amount of liquid, and temp of room", "Solutions, concentration, mass, and cup size", "Liquid concentration, mass, weight, and storage area", "Mass, weight, change in mass, and % change"],
-      a: 0
-    },
-
-    // Source 3: Cell Lab
-    {
-      q: "What three characteristics do ALL cells have in common?[cite: 3]",
-      o: ["Cell membrane, cytoplasm, and DNA", "Nucleus, cell wall, and chloroplasts", "Cell membrane, nucleus, and cytoplasm", "Cell wall, cytoplasm, and DNA"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What is a defining characteristic of prokaryotic cells?[cite: 3]",
-      o: ["No nucleus", "Has a true nucleus", "Has membrane-bound organelles", "Has chloroplasts"],
-      a: 0
-    },
-    {
-      q: "What are the defining characteristics of eukaryotic cells?[cite: 3]",
-      o: ["Has a nucleus and membrane-bound organelles", "No nucleus and no organelles", "Has a cell wall but no nucleus", "Only found in plant species"],
-      a: 0
-    },
-    {
-      q: "Which of the following cells observed in the lab is prokaryotic?[cite: 3]",
-      o: ["Bacteria", "Human cheek cells", "Onion cells", "Paramecium"],
-      a: 0
-    },
-    {
-      q: "Which of the following lists contains ONLY eukaryotic cells observed in the lab?[cite: 3]",
+      q: "Which of the following lists contains ONLY eukaryotic cells observed in the lab?",
       o: ["Human, onion, Elodea, frog, and paramecium", "Bacteria, onion, Elodea, and frog", "Human, bacteria, and paramecium", "Onion, Elodea, and bacteria"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Which of the eukaryotic cells observed are classified as plant cells?[cite: 3]",
+      q: "Which of the eukaryotic cells observed are classified as plant cells?",
       o: ["Onion and Elodea", "Human and frog", "Paramecium and bacteria", "Onion and human"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Which of the eukaryotic cells observed are classified as animal cells?[cite: 3]",
+      q: "Which of the eukaryotic cells observed are classified as animal cells?",
       o: ["Human, frog, and paramecium", "Onion and Elodea", "Bacteria and paramecium", "Human, onion, and frog"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Which ONE cell observed in the lab had visible chloroplasts?[cite: 3]",
+      q: "Which ONE cell observed in the lab had visible chloroplasts?",
       o: ["Elodea", "Onion", "Human cheek cell", "Paramecium"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Which of the plant cells observed did NOT have visible chloroplasts?[cite: 3]",
+      q: "Which of the plant cells observed did NOT have visible chloroplasts?",
       o: ["Onion", "Elodea", "Paramecium", "Frog blood cell"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "Is the single-celled organism Paramecium a prokaryote or a eukaryote, and why?[cite: 3]",
+      q: "Is the single-celled organism Paramecium a prokaryote or a eukaryote, and why?",
       o: ["Eukaryote, because of the nucleus", "Prokaryote, because it is single-celled", "Eukaryote, because it has chloroplasts", "Prokaryote, because it lacks a cell wall"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When looking at a human cheek cell under a microscope, what three parts were labeled?[cite: 3]",
+      q: "When looking at a human cheek cell under a microscope, what three parts were labeled?",
       o: ["Cell membrane, nucleus, and cytoplasm", "Cell wall, chloroplast, and nucleus", "Cell membrane, DNA, and flagella", "Cell wall, cytoplasm, and DNA"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "When labeling an onion skin cell, what parts were identified?[cite: 3]",
+      q: "When labeling an onion skin cell, what parts were identified?",
       o: ["Cell wall, nucleus, and cytoplasm", "Cell membrane, nucleus, and chloroplast", "Cell wall, DNA, and cytoplasm", "Cell membrane, nucleus, and cytoplasm"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What three structures were labeled on the Elodea cells?[cite: 3]",
+      q: "What three structures were labeled on the Elodea cells?",
       o: ["Cell wall, chloroplast, and cytoplasm", "Cell membrane, nucleus, and cytoplasm", "Cell wall, nucleus, and DNA", "Cell membrane, chloroplast, and DNA"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What parts were labeled on the Frog blood cells?[cite: 3]",
+      q: "What parts were labeled on the Frog blood cells?",
       o: ["Cell membrane, nucleus, and cytoplasm", "Cell wall, nucleus, and cytoplasm", "Cell membrane, chloroplast, and DNA", "Cell wall, cytoplasm, and DNA"],
-      a: 0
+      a: 0,
+      isBase: false
     },
     {
-      q: "What parts were labeled on the Paramecium cell?[cite: 3]",
-      o: ["Cell membrane, nucleus, and cytoplasm", "Cell wall, nucleus, and cytoplasm", "Cell membrane, chloroplast, and DNA", "Cell wall, cytoplasm, and DNA"],
-      a: 0
-    },
-    {
-      q: "What two parts were labeled on the Bacteria cell?[cite: 3]",
+      q: "What two parts were labeled on the Bacteria cell?",
       o: ["Cell membrane and DNA", "Cell wall and nucleus", "Cell membrane and nucleus", "Chloroplast and cytoplasm"],
-      a: 0
+      a: 0,
+      isBase: false
     }
   ];
 
   let gameQueue = [];
   let currentQuestionIndex = 0;
   let score = 0;
-  let state = 'playing'; 
+  let state = 'menu'; 
   let autoAdvanceTimer = null;
 
+  const startScreen = document.getElementById('start-screen');
+  const quizUI = document.getElementById('quiz-ui');
   const questionText = document.getElementById('question-text');
   const optionsGrid = document.getElementById('options-grid');
   const progressFill = document.getElementById('progress-fill');
@@ -459,11 +521,24 @@
     return array;
   }
 
-  function initGame() {
+  function showMenu() {
+    state = 'menu';
+    startScreen.style.display = 'flex';
+    quizUI.style.display = 'none';
+  }
+
+  function initGame(mode) {
+    startScreen.style.display = 'none';
+    quizUI.style.display = 'block';
+    
     let pool = [];
     
-    // Add & shuffle text questions
-    textQuestionsData.forEach(item => {
+    // Filter questions based on selected mode
+    const filteredQuestions = mode === 'learn' 
+      ? textQuestionsData.filter(q => q.isBase === true)
+      : textQuestionsData;
+    
+    filteredQuestions.forEach(item => {
       // Map options to objects tracking their correctness, then shuffle them
       let optionsWithFlags = item.o.map((text, i) => ({ text, isCorrect: i === item.a }));
       optionsWithFlags = shuffle(optionsWithFlags);
@@ -557,9 +632,9 @@
     
     optionsGrid.classList.add('single-col');
     optionsGrid.innerHTML = `
-      <button class="option-btn" style="justify-content: center; background: rgba(56, 189, 248, 0.15); border-color: #38bdf8;" onclick="initGame()">
-        <div class="key-badge" style="width: auto; padding: 0 10px;">ENTER</div>
-        <div>Play Again</div>
+      <button class="option-btn" style="justify-content: center; background: rgba(56, 189, 248, 0.15); border-color: #38bdf8;" onclick="showMenu()">
+        <div class="key-badge" style="width: auto; padding: 0 10px;">ESC</div>
+        <div>Return to Menu</div>
       </button>
     `;
   }
@@ -575,12 +650,13 @@
       }
     } else if (state === 'waiting' && e.key === 'Enter') {
       nextQuestion();
-    } else if (state === 'ended' && e.key === 'Enter') {
-      initGame();
+    } else if (state === 'ended' && (e.key === 'Enter' || e.key === 'Escape')) {
+      showMenu();
+    } else if (state === 'menu') {
+      if (e.key === '1') initGame('learn');
+      if (e.key === '2') initGame('full');
     }
   });
-
-  initGame();
 </script>
 
 </body></html>
