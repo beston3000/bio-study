@@ -292,203 +292,245 @@
 
 <script>
   const textQuestionsData = [
-    // --- NEW / TAGGED BASIC LEARNING QUESTIONS ---
+    // --- BASIC LEARNING QUESTIONS (Core Concepts) ---
     {
-      q: "What is a eukaryotic cell?",
+      q: "What is a eukaryotic cell?[cite: 3]",
       o: ["A cell that has a nucleus and membrane-bound organelles", "A simple cell with no nucleus", "A cell that is only found in plants", "A cell that lacks DNA"],
       a: 0,
       isBase: true
     },
     {
-      q: "What is a prokaryotic cell?",
+      q: "What is a prokaryotic cell?[cite: 3]",
       o: ["A cell with no nucleus", "A cell with a distinct nucleus", "An animal cell", "A cell that lacks a cell membrane"],
       a: 0,
       isBase: true
     },
     {
-      q: "What three structures do ALL cells have in common?",
+      q: "What three structures do ALL cells have in common?[cite: 3]",
       o: ["Cell membrane, cytoplasm, and DNA", "Nucleus, cell wall, and chloroplasts", "Cell wall, cytoplasm, and DNA", "Cell membrane, nucleus, and cytoplasm"],
       a: 0,
       isBase: true
     },
     {
-      q: "What does it mean when a cell membrane is described as 'fluid'?",
+      q: "What does it mean when a cell membrane is described as 'fluid'?[cite: 1]",
       o: ["It is always in motion", "It is made of pure water", "It dissolves easily", "It is entirely rigid"],
       a: 0,
       isBase: true
     },
     {
-      q: "What is a 'dependent variable' in an experiment?",
+      q: "What is a 'dependent variable' in an experiment?[cite: 2]",
       o: ["The result or data that is measured (like mass)", "The condition the scientist changes (like the solution)", "The elements kept exactly the same", "The control group"],
       a: 0,
       isBase: true
     },
     {
-      q: "What is an 'independent variable' in an experiment?",
+      q: "What is an 'independent variable' in an experiment?[cite: 2]",
       o: ["The condition the scientist changes (like the liquid concentration)", "The result that is measured (like mass)", "The elements kept exactly the same", "The control group"],
       a: 0,
       isBase: true
     },
     {
-      q: "What is a 'controlled variable'?",
+      q: "What is a 'controlled variable'?[cite: 2]",
       o: ["A condition kept exactly the same throughout the experiment", "The result being measured", "The main thing being changed by the scientist", "The hypothesis"],
       a: 0,
       isBase: true
     },
     {
-      q: "Which type of cell is bacteria?",
+      q: "Which type of cell is bacteria?[cite: 3]",
       o: ["Prokaryotic", "Eukaryotic", "Plant cell", "Animal cell"],
       a: 0,
       isBase: true
     },
     {
-      q: "Why is having a flexible barrier significant for animal cells?",
+      q: "Why is having a flexible barrier significant for animal cells?[cite: 1]",
       o: ["So that cells can move with the body", "So they can absorb more light", "So they can become rigid like plants", "So they never divide"],
       a: 0,
       isBase: true
     },
-
-    // --- DETAILED LAB QUESTIONS ---
     {
-      q: "In the bubble activity, what did the light and movement of molecules on the soap film demonstrate?",
+      q: "Based on the cell lab, which structure is found in plant cells (like Onion and Elodea) but NOT in animal cells (like Human cheek and Frog blood)?[cite: 3]",
+      o: ["Cell wall", "Cell membrane", "Cytoplasm", "Nucleus"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "If a cell has membrane-bound organelles, it must be classified as:[cite: 3]",
+      o: ["Eukaryotic", "Prokaryotic", "Bacterial", "Unicellular only"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "What does the 'self-sealing' nature of a cell membrane allow?[cite: 1]",
+      o: ["It allows things to go through without destroying the membrane", "It allows the cell to completely stop all transport", "It makes the cell wall rigid", "It allows the cell to burst safely"],
+      a: 0,
+      isBase: true
+    },
+    {
+      q: "In the osmosis lab, what liquid was used as the 0% salt concentration control?[cite: 2]",
+      o: ["Distilled water", "Tap water", "5% NaCl", "20% NaCl"],
+      a: 0,
+      isBase: true
+    },
+
+    // --- DETAILED LAB QUESTIONS (Full Review Only) ---
+    {
+      q: "In the bubble activity, what did the light and movement of molecules on the soap film demonstrate?[cite: 1]",
       o: ["Fluidity", "Flexibility", "Self-sealing", "Cell division"],
       a: 0,
       isBase: false
     },
     {
-      q: "What did bending the straws without breaking the soap film demonstrate about membranes?",
+      q: "What specific action in the membrane model lab showed that membranes are 'always in motion'?[cite: 1]",
+      o: ["Watching the light on the membrane", "Poking it with a dry paper clip", "Bending the straws", "Dividing the bubble in half"],
+      a: 0,
+      isBase: false
+    },
+    {
+      q: "What did bending the straws without breaking the soap film demonstrate about membranes?[cite: 1]",
       o: ["Flexibility", "Fluidity", "Permeability", "Rigidity"],
       a: 0,
       isBase: false
     },
     {
-      q: "When the membrane sealed around the paper clip, what property did this show?",
+      q: "When the membrane sealed around the paper clip, what property did this show?[cite: 1]",
       o: ["Self-sealing", "Fluidity", "Active transport", "Osmosis"],
       a: 0,
       isBase: false
     },
     {
-      q: "What happened when the soap bubble membrane was poked with a dry paper clip?",
+      q: "What happened when the soap bubble membrane was poked with a dry paper clip?[cite: 1]",
       o: ["The membrane popped", "The membrane sealed around it", "The paper clip passed through easily", "The membrane duplicated"],
       a: 0,
       isBase: false
     },
     {
-      q: "When poking a finger into the membrane, what property was demonstrated when it didn't pop?",
+      q: "When poking a finger into the membrane, what property was demonstrated when it didn't pop?[cite: 1]",
       o: ["Self-sealing", "Active transport", "Osmosis", "Cell division"],
       a: 0,
       isBase: false
     },
     {
-      q: "In the bubble model, a string circle allowed a hole to be opened in the middle. What does this demonstrate about cell membranes?",
-      o: ["They can have openings for transport of substances", "They are completely impermeable", "They dissolve in water", "They are entirely solid"],
+      q: "In the membrane model lab, what represented an opening for the transport of substances through the membrane?[cite: 1]",
+      o: ["A hole opened through the string circle", "The straws bending", "The dry paper clip", "The light reflecting on the soap"],
       a: 0,
       isBase: false
     },
     {
-      q: "Dividing the bubble in half without it popping was used to show what cellular process?",
+      q: "Dividing the bubble in half without it popping was used to show what cellular process?[cite: 1]",
       o: ["Cell division", "Protein synthesis", "Osmosis", "Cellular respiration"],
       a: 0,
       isBase: false
     },
     {
-      q: "What does the self-sealing property of membranes allow?",
-      o: ["Things can go through them without the membrane being destroyed", "The cell to trap water indefinitely", "The cell wall to harden instantly", "The nucleus to escape without damage"],
+      q: "Before weighing the carrot/potato in the osmosis lab, what crucial step had to be done?[cite: 2]",
+      o: ["Dry it off using a paper towel", "Soak it in distilled water", "Cut it into smaller pieces", "Measure its length"],
       a: 0,
       isBase: false
     },
     {
-      q: "In the Osmosis Lab, what formula is used to calculate the change in mass?",
+      q: "What specific salt (NaCl) solution concentrations were tested in the osmosis lab alongside distilled water?[cite: 2]",
+      o: ["5% and 20%", "10% and 50%", "1% and 5%", "15% and 30%"],
+      a: 0,
+      isBase: false
+    },
+    {
+      q: "In the Osmosis Lab, what formula is used to calculate the change in mass?[cite: 2]",
       o: ["Final mass - Initial mass", "Initial mass + Final mass", "Final mass / Initial mass", "Initial mass - Final mass"],
       a: 0,
       isBase: false
     },
     {
-      q: "In the Osmosis Lab, what is the correct formula to calculate the percent change in mass?",
+      q: "In the Osmosis Lab, what is the correct formula to calculate the percent change in mass?[cite: 2]",
       o: ["(Change in Mass / Initial Mass) x 100", "(Final Mass / Initial Mass) x 100", "(Initial Mass / Change in Mass) x 100", "(Change in Mass / Final Mass) x 100"],
       a: 0,
       isBase: false
     },
     {
-      q: "When making the bar graph for the osmosis lab data, which variable goes on the Y axis?",
+      q: "When making the bar graph for the osmosis lab data, which variable goes on the Y axis?[cite: 2]",
       o: ["% Change in mass", "Concentration of solutions", "Initial mass", "Final mass"],
       a: 0,
       isBase: false
     },
     {
-      q: "When making the bar graph for the osmosis lab data, which variable goes on the X axis?",
+      q: "When making the bar graph for the osmosis lab data, which variable goes on the X axis?[cite: 2]",
       o: ["Concentration of the solutions", "% Change in mass", "Type of potato/carrot", "Time in solution"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which of these lists contains ONLY controlled variables from the osmosis lab?",
+      q: "Which of these lists contains ONLY controlled variables from the osmosis lab?[cite: 2]",
       o: ["Cup size, storage area, amount of liquid, and temp of room", "Solutions, concentration, mass, and cup size", "Liquid concentration, mass, weight, and storage area", "Mass, weight, change in mass, and % change"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which of the following lists contains ONLY eukaryotic cells observed in the lab?",
+      q: "Which of the following lists contains ONLY eukaryotic cells observed in the lab?[cite: 3]",
       o: ["Human, onion, Elodea, frog, and paramecium", "Bacteria, onion, Elodea, and frog", "Human, bacteria, and paramecium", "Onion, Elodea, and bacteria"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which of the eukaryotic cells observed are classified as plant cells?",
+      q: "Which of the eukaryotic cells observed from the lab are classified specifically as plant cells?[cite: 3]",
       o: ["Onion and Elodea", "Human and frog", "Paramecium and bacteria", "Onion and human"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which of the eukaryotic cells observed are classified as animal cells?",
+      q: "Which of the eukaryotic cells observed are classified specifically as animal cells?[cite: 3]",
       o: ["Human, frog, and paramecium", "Onion and Elodea", "Bacteria and paramecium", "Human, onion, and frog"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which ONE cell observed in the lab had visible chloroplasts?",
+      q: "Which ONE cell observed in the lab had visible chloroplasts under the microscope?[cite: 3]",
       o: ["Elodea", "Onion", "Human cheek cell", "Paramecium"],
       a: 0,
       isBase: false
     },
     {
-      q: "Which of the plant cells observed did NOT have visible chloroplasts?",
+      q: "Which of the plant cells observed did NOT have visible chloroplasts?[cite: 3]",
       o: ["Onion", "Elodea", "Paramecium", "Frog blood cell"],
       a: 0,
       isBase: false
     },
     {
-      q: "Is the single-celled organism Paramecium a prokaryote or a eukaryote, and why?",
+      q: "Is the single-celled organism Paramecium a prokaryote or a eukaryote, and why?[cite: 3]",
       o: ["Eukaryote, because of the nucleus", "Prokaryote, because it is single-celled", "Eukaryote, because it has chloroplasts", "Prokaryote, because it lacks a cell wall"],
       a: 0,
       isBase: false
     },
     {
-      q: "When looking at a human cheek cell under a microscope, what three parts were labeled?",
+      q: "When looking at a human cheek cell under a microscope, what three parts were labeled?[cite: 3]",
       o: ["Cell membrane, nucleus, and cytoplasm", "Cell wall, chloroplast, and nucleus", "Cell membrane, DNA, and flagella", "Cell wall, cytoplasm, and DNA"],
       a: 0,
       isBase: false
     },
     {
-      q: "When labeling an onion skin cell, what parts were identified?",
+      q: "When labeling an onion skin cell, what parts were identified?[cite: 3]",
       o: ["Cell wall, nucleus, and cytoplasm", "Cell membrane, nucleus, and chloroplast", "Cell wall, DNA, and cytoplasm", "Cell membrane, nucleus, and cytoplasm"],
       a: 0,
       isBase: false
     },
     {
-      q: "What three structures were labeled on the Elodea cells?",
+      q: "What three structures were labeled on the Elodea cells?[cite: 3]",
       o: ["Cell wall, chloroplast, and cytoplasm", "Cell membrane, nucleus, and cytoplasm", "Cell wall, nucleus, and DNA", "Cell membrane, chloroplast, and DNA"],
       a: 0,
       isBase: false
     },
     {
-      q: "What parts were labeled on the Frog blood cells?",
+      q: "What parts were labeled on the Frog blood cells?[cite: 3]",
       o: ["Cell membrane, nucleus, and cytoplasm", "Cell wall, nucleus, and cytoplasm", "Cell membrane, chloroplast, and DNA", "Cell wall, cytoplasm, and DNA"],
       a: 0,
       isBase: false
     },
     {
-      q: "What two parts were labeled on the Bacteria cell?",
+      q: "In the Cell Lab, what genetic material was specifically labeled in the Bacteria cell?[cite: 3]",
+      o: ["DNA", "Nucleus", "Chloroplast", "Chromosomes"],
+      a: 0,
+      isBase: false
+    },
+    {
+      q: "What two specific parts were labeled on the Bacteria cell in the diagram?[cite: 3]",
       o: ["Cell membrane and DNA", "Cell wall and nucleus", "Cell membrane and nucleus", "Chloroplast and cytoplasm"],
       a: 0,
       isBase: false
